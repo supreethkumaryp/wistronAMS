@@ -1,0 +1,63 @@
+{% extends "layouts/base.html" %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="/static/app-assets/vendors/css/tables/datatable/datatables.min.css">
+<link rel="stylesheet" type="text/css" href="/static/app-assets/css/core/menu/menu-types/vertical-menu-modern.css">
+<link rel="stylesheet" type="text/css" href="/static/app-assets/css/core/colors/palette-gradient.css">
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-6 offset-3">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Branches</h4>
+                <div class="heading-elements">
+                    <a href="/branch/New" class="btn btn-success mr-1 mt-1"><span class="fa fa-plus"></span> Add New</a>
+                </div>
+            </div>
+            <div class="card-content mt-1">
+                <div class="card-body">
+                    <table class="table table-striped table-bordered branches"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script src="/static/app-assets/vendors/js/forms/spinner/jquery.bootstrap-touchspin.js"></script>
+<script src="/static/app-assets/vendors/js/forms/validation/jqBootstrapValidation.js"></script>
+<script src="/static/app-assets/vendors/js/forms/icheck/icheck.min.js"></script>
+<script src="/static/app-assets/vendors/js/forms/toggle/switchery.min.js"></script>
+
+<script src="/static/app-assets/js/scripts/forms/validation/form-validation.js"></script>
+
+<script src="/static/app-assets/vendors/js/tables/datatable/datatables.min.js"></script>
+
+<script>
+
+    $(document).ready(function() {
+        $('.branches').DataTable( {
+            "ajax" : '/get-branches',
+            "columns": [
+                { "title": "Branch Name", "data": "branch_name" },
+                {
+                    "title": "",
+                    "data": "branch_id",
+                    "width": "20%",
+                    "render": function(data, type) {
+                        return '<center><a class="btn btn-sm btn-outline-warning mr-1" href="/branch/'+data+'"><i class="feather icon-edit"></i> Edit</a></center>'
+                    }
+                },
+			],
+            "responsive": true,
+			"autoWidth": false,
+        });
+    });
+
+</script>
+{% endblock javascripts %}

@@ -1,0 +1,56 @@
+{% extends "layouts/base.html" %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="/static/app-assets/vendors/css/tables/datatable/datatables.min.css">
+<link rel="stylesheet" type="text/css" href="/static/app-assets/css/core/menu/menu-types/vertical-menu-modern.css">
+<link rel="stylesheet" type="text/css" href="/static/app-assets/css/core/colors/palette-gradient.css">
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-6 offset-3">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Function</h4>
+                <div class="heading-elements">
+                    <a href="/function" class="btn btn-danger mr-1 mt-1"><span class="fa fa-times"></span> Close</a>
+                </div>
+            </div>
+            <div class="card-content mt-1">
+                <div class="card-body">
+                    <form class="form-horizontal" action="" method="POST" novalidate>
+
+                        {{ form.func_id(class="form-control", placeholder=form.func_id.label.text) }}
+
+                        <div class="col-12 form-group">
+                            <h5>{{ form.func_name.label.text }} <span class="required text-danger">*</span></h5>
+                            <div class="controls">
+                                {{ form.func_name(class="form-control", placeholder=form.func_name.label.text) }}
+                            </div>
+                        </div>
+
+                        <div class="col-12 form-group">
+                            <div class="text-right">
+                                <button type="submit" name="save" id="save" class="btn btn-success">Save <i class="fa fa-thumbs-o-up position-right"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script src="/static/app-assets/vendors/js/forms/spinner/jquery.bootstrap-touchspin.js"></script>
+<script src="/static/app-assets/vendors/js/forms/validation/jqBootstrapValidation.js"></script>
+<script src="/static/app-assets/vendors/js/forms/icheck/icheck.min.js"></script>
+<script src="/static/app-assets/vendors/js/forms/toggle/switchery.min.js"></script>
+
+<script src="/static/app-assets/js/scripts/forms/validation/form-validation.js"></script>
+
+<script src="/static/app-assets/vendors/js/tables/datatable/datatables.min.js"></script>
+{% endblock javascripts %}
