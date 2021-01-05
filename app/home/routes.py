@@ -21,15 +21,18 @@ from jinja2 import TemplateNotFound
 
 # Department
 @blueprint.route('/department', methods=['GET', 'POST'])
+@login_required
 def department():
     return render_template('department/departments.html')
 
 @blueprint.route('/get-departments', methods=['GET', 'POST'])
+@login_required
 def get_departments():
     data = [r.as_dict() for r in Department.query.all()]
     return jsonify(data=data)
 
 @blueprint.route('/department/<dept_id>', methods=['GET', 'POST'])
+@login_required
 def department_create(dept_id):
     if (dept_id == "New"):
         form = DepartmentForm(request.form)
@@ -50,15 +53,18 @@ def department_create(dept_id):
 
 # Function
 @blueprint.route('/function', methods=['GET', 'POST'])
+@login_required
 def function():
     return render_template('function/functions.html')
 
 @blueprint.route('/get-functions', methods=['GET', 'POST'])
+@login_required
 def get_functions():
     data = [r.as_dict() for r in Function.query.all()]
     return jsonify(data=data)
 
 @blueprint.route('/function/<func_id>', methods=['GET', 'POST'])
+@login_required
 def function_create(func_id):
     if (func_id == "New"):
         form = FunctionForm(request.form)
@@ -79,15 +85,18 @@ def function_create(func_id):
 
 # Plant
 @blueprint.route('/plant', methods=['GET', 'POST'])
+@login_required
 def plant():
     return render_template('plant/plants.html')
 
 @blueprint.route('/get-plants', methods=['GET', 'POST'])
+@login_required
 def get_plants():
     data = [r.as_dict() for r in Plant.query.all()]
     return jsonify(data=data)
 
 @blueprint.route('/plant/<plant_id>', methods=['GET', 'POST'])
+@login_required
 def plant_create(plant_id):
     if (plant_id == "New"):
         form = PlantForm(request.form)
@@ -108,15 +117,18 @@ def plant_create(plant_id):
 
 # Branch
 @blueprint.route('/branch', methods=['GET', 'POST'])
+@login_required
 def branch():
     return render_template('branch/branches.html')
 
 @blueprint.route('/get-branches', methods=['GET', 'POST'])
+@login_required
 def get_branches():
     data = [r.as_dict() for r in Branch.query.all()]
     return jsonify(data=data)
 
 @blueprint.route('/branch/<branch_id>', methods=['GET', 'POST'])
+@login_required
 def branch_create(branch_id):
     if (branch_id == "New"):
         form = BranchForm(request.form)
@@ -137,15 +149,18 @@ def branch_create(branch_id):
 
 # Project
 @blueprint.route('/project', methods=['GET', 'POST'])
+@login_required
 def project():
     return render_template('project/projects.html')
 
 @blueprint.route('/get-projects', methods=['GET', 'POST'])
+@login_required
 def get_projects():
     data = [r.as_dict() for r in Project.query.all()]
     return jsonify(data=data)
 
 @blueprint.route('/project/<project_id>', methods=['GET', 'POST'])
+@login_required
 def project_create(project_id):
     if (project_id == "New"):
         form = ProjectForm(request.form)
@@ -166,15 +181,18 @@ def project_create(project_id):
 
 # Shift
 @blueprint.route('/shift', methods=['GET', 'POST'])
+@login_required
 def shift():
     return render_template('shift/shifts.html')
 
 @blueprint.route('/get-shifts', methods=['GET', 'POST'])
+@login_required
 def get_shifts():
     data = [r.as_dict() for r in Shift.query.all()]
     return jsonify(data=data)
 
 @blueprint.route('/shift/<shift_id>', methods=['GET', 'POST'])
+@login_required
 def shift_create(shift_id):
     if (shift_id == "New"):
         form = ShiftForm(request.form)
@@ -195,10 +213,12 @@ def shift_create(shift_id):
 
 # Shift
 @blueprint.route('/employee', methods=['GET', 'POST'])
+@login_required
 def employee():
     return render_template('employee/employees.html')
 
 @blueprint.route('/get-employees', methods=['GET', 'POST'])
+@login_required
 def get_employees():
     data = []
     for record in db.session.query(User).join(Department, Department.dept_id == User.dept_id).join(Function, Function.func_id == User.func_id).join(Plant, Plant.plant_id == User.plant_id).join(Branch, Branch.branch_id == User.branch_id).join(Project, Project.project_id == User.project_id).join(Shift, Shift.shift_id == User.shift_id).all():
@@ -224,6 +244,7 @@ def get_employees():
     return jsonify(data=data)
 
 @blueprint.route('/employee/<usr_miId>', methods=['GET', 'POST'])
+@login_required
 def employee_create(usr_miId):
     if (usr_miId == "New"):
         form = UserForm(request.form)
