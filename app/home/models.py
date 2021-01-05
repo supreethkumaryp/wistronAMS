@@ -234,4 +234,4 @@ class Roster(db.Model):
             setattr(self, property, value)
 
     def __repr__(self):
-        return "<Roster {}>".format(self.dept_id)
+        return "<Roster {}>".format(self.rst_id)

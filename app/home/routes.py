@@ -356,12 +356,58 @@ def roster(rst_date):
                 db.session.add(rst)
             db.session.commit()
 
-            return redirect(url_for('home_blueprint.roster'))
+            return redirect('/roster/{}'.format(rst_date))
 
     return render_template('roster/rosters.html', data=data, form=form)
 
 # Dashboard
-@blueprint.route('/dashboard', methods=['GET', 'POST'])
+@blueprint.route('/dashboard/<reoprt_date>', methods=['GET', 'POST'])
 @login_required
-def dashboard():
-    pass
+def dashboard(reoprt_date):
+
+    form = RosterDateForm(request.form)
+    form.rst_date.data = datetime.strptime(reoprt_date, r"%Y-%m-%d")
+
+    data = {}
+
+    depts = Department.query.all()
+    shifts = Shift.query.all()
+
+    for dept in depts:
+        data[dept.dept_name] = {}
+        for shift in shifts:
+            data[dept.dept_name][shift.shift_name] = {}
+
+            data[dept.dept_name][shift.shift_name]['total'] = User.query.filter_by(dept_id=dept.dept_id, shift_id=shift.shift_id).count()
+            data[dept.dept_name][shift.shift_name]['total_dl'] = User.query.filter_by(dept_id=dept.dept_id, shift_id=shift.shift_id, usr_type="dl").count()
+            data[dept.dept_name][shift.shift_name]['total_idl'] = User.query.filter_by(dept_id=dept.dept_id, shift_id=shift.shift_id, usr_type="idl").count()
+
+            data[dept.dept_name][shift.shift_name]['present'] = 0
+            data[dept.dept_name][shift.shift_name]['present_dl'] = 0
+            data[dept.dept_name][shift.shift_name]['present_idl'] = 0
+
+            data[dept.dept_name][shift.shift_name]['absent'] = 0
+            data[dept.dept_name][shift.shift_name]['absent_dl'] = 0
+            data[dept.dept_name][shift.shift_name]['absent_idl'] = 0
+
+    records = db.session.query(Roster).filter(Roster.rst_date == datetime.strptime(reoprt_date, r"%Y-%m-%d")).join(User, User.usr_miId == Roster.usr_miId).all()
+    for record in records:
+        if (record.rst_status == "present"):
+            data[record.rst_user.usr_department.dept_name][record.rst_user.usr_shift.shift_name]['present'] += 1
+            data[record.rst_user.usr_department.dept_name][record.rst_user.usr_shift.shift_name]['present_'+record.rst_user.usr_type] += 1
+        else:
+            data[record.rst_user.usr_department.dept_name][record.rst_user.usr_shift.shift_name]['absent'] += 1
+            data[record.rst_user.usr_department.dept_name][record.rst_user.usr_shift.shift_name]['absent_'+record.rst_user.usr_type] += 1
+
+
+    for dept in depts:
+        for shift in shifts:
+            data[dept.dept_name][shift.shift_name]['percentage_present'] = (data[dept.dept_name][shift.shift_name]['present'] / data[dept.dept_name][shift.shift_name]['total'] * 100) if data[dept.dept_name][shift.shift_name]['total'] else 0
+            data[dept.dept_name][shift.shift_name]['percentage_present_dl'] = (data[dept.dept_name][shift.shift_name]['present_dl'] / data[dept.dept_name][shift.shift_name]['total_dl'] * 100) if data[dept.dept_name][shift.shift_name]['total_dl'] else 0
+            data[dept.dept_name][shift.shift_name]['percentage_present_idl'] = (data[dept.dept_name][shift.shift_name]['present_idl'] / data[dept.dept_name][shift.shift_name]['total_idl'] * 100) if data[dept.dept_name][shift.shift_name]['total_idl'] else 0
+
+            data[dept.dept_name][shift.shift_name]['percentage_absent'] = (data[dept.dept_name][shift.shift_name]['absent'] / data[dept.dept_name][shift.shift_name]['total'] * 100) if data[dept.dept_name][shift.shift_name]['total'] else 0
+            data[dept.dept_name][shift.shift_name]['percentage_absent_dl'] = (data[dept.dept_name][shift.shift_name]['absent_dl'] / data[dept.dept_name][shift.shift_name]['total_dl'] * 100) if data[dept.dept_name][shift.shift_name]['total_dl'] else 0
+            data[dept.dept_name][shift.shift_name]['percentage_absent_idl'] = (data[dept.dept_name][shift.shift_name]['absent_idl'] / data[dept.dept_name][shift.shift_name]['total_idl'] * 100) if data[dept.dept_name][shift.shift_name]['total_idl'] else 0
+
+    return render_template('dashboard.html', data=data, form=form)

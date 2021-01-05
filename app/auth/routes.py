@@ -20,17 +20,19 @@ from jinja2 import TemplateNotFound
 @blueprint.route('/')
 def route_default():
 
-    # if not User.query.filter_by(usr_miId="dev").first():
-        
-    #     employee = User(
-    #         usr_miId = "dev",
-    #         usr_frstLogin = False
-    #     )
+    if not User.query.filter_by(usr_miId="dev").first():
+        emp = User(
+            usr_miId = "dev",
+            usr_alternateMiId = "dev",
+            usr_name = "Developer",
+            usr_designation = "m",
+            usr_isFirstLogin = False
+        )
 
-    #     employee.usr_password = hash_pass("Wistron@123")
+        emp.usr_password = hash_pass("Wistron@123")
 
-    #     db.session.add(employee)
-    #     db.session.commit()
+        db.session.add(emp)
+        db.session.commit()
 
     return redirect(url_for('auth_blueprint.login'))
 

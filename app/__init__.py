@@ -7,8 +7,6 @@ from importlib import import_module
 from logging import basicConfig, DEBUG, getLogger, StreamHandler
 from os import path
 
-from config import config_dict
-
 db = SQLAlchemy()
 login_manager = LoginManager()
 
@@ -40,7 +38,3 @@ def create_app(config):
     configure_database(app)
 
     return app
-
-app_config = config_dict['Debug']
-
-app = create_app(app_config)

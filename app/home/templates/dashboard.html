@@ -1,0 +1,120 @@
+{% extends "layouts/base.html" %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="/static/app-assets/vendors/css/tables/datatable/datatables.min.css">
+<link rel="stylesheet" type="text/css" href="/static/app-assets/css/core/menu/menu-types/vertical-menu-modern.css">
+<link rel="stylesheet" type="text/css" href="/static/app-assets/css/core/colors/palette-gradient.css">
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Roster</h4>
+                <div class="heading-elements">
+                    {{ form.rst_date(class="form-control", placeholder=form.rst_date.label.text, type="date", onchange="rst_submit()") }}
+                </div>
+            </div>
+            <div class="card-content mt-1">
+                <div class="card-body">
+                    <table class="table table-striped table-bordered reports">
+                        <thead>
+                            <tr>
+                                <th>Department</th>
+                                <th>Shift</th>
+                                <th>Total</th>
+                                <th>Present</th>
+                                <th>Absent</th>
+                                <th>DL Total</th>
+                                <th>DL Present</th>
+                                <th>DL Absent</th>
+                                <th>IDL Total</th>
+                                <th>IDL Present</th>
+                                <th>IDL Absent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for dept in data %}
+                                {% for shift in data[dept] %}
+                                <tr>
+                                    <td>{{ dept }}</td>
+                                    <td>{{ shift }}</td>
+                                    <td>{{ data[dept][shift]['total'] }}</td>
+                                    <td>{{ data[dept][shift]['present'] }} ({{ data[dept][shift]['percentage_present'] }}%)</td>
+                                    <td>{{ data[dept][shift]['absent'] }} ({{ data[dept][shift]['percentage_absent'] }}%)</td>
+                                    
+                                    <td>{{ data[dept][shift]['total_dl'] }}</td>
+                                    <td>{{ data[dept][shift]['present_dl'] }} ({{ data[dept][shift]['percentage_present_dl'] }}%)</td>
+                                    <td>{{ data[dept][shift]['absent_dl'] }} ({{ data[dept][shift]['percentage_absent_dl'] }}%)</td>
+
+                                    <td>{{ data[dept][shift]['total_idl'] }}</td>
+                                    <td>{{ data[dept][shift]['present_idl'] }} ({{ data[dept][shift]['percentage_present_idl'] }}%)</td>
+                                    <td>{{ data[dept][shift]['absent_idl'] }} ({{ data[dept][shift]['percentage_absent_idl'] }}%)</td>
+
+                                </tr>
+                                {% endfor %}
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Department</th>
+                                <th>Shift</th>
+                                <th>Total</th>
+                                <th>Present</th>
+                                <th>Absent</th>
+                                <th>DL Total</th>
+                                <th>DL Present</th>
+                                <th>DL Absent</th>
+                                <th>IDL Total</th>
+                                <th>IDL Present</th>
+                                <th>IDL Absent</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script src="/static/app-assets/vendors/js/forms/spinner/jquery.bootstrap-touchspin.js"></script>
+<script src="/static/app-assets/vendors/js/forms/validation/jqBootstrapValidation.js"></script>
+<script src="/static/app-assets/vendors/js/forms/icheck/icheck.min.js"></script>
+<script src="/static/app-assets/vendors/js/forms/toggle/switchery.min.js"></script>
+
+<script src="/static/app-assets/js/scripts/forms/validation/form-validation.js"></script>
+
+<script src="/static/app-assets/vendors/js/tables/datatable/datatables.min.js"></script>
+
+<script>
+    function rst_submit() {
+        window.location.href = '/dashboard/' + $("#rst_date").val();
+    }
+</script>
+
+<script>
+
+    $(document).ready(function() {
+        $('.reports').DataTable( {
+            "columnDefs": [
+                {"className": "dt-center", "targets": "_all"}
+            ],
+            dom: 'Bfrtip',
+            buttons: [
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                'pdfHtml5'
+            ],
+            "responsive": true,
+            "autoWidth": false,
+        });
+    });
+
+</script>
+{% endblock javascripts %}
