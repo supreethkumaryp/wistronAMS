@@ -1,0 +1,206 @@
+{% extends "layouts/base.html" %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="/static/app-assets/vendors/css/tables/datatable/datatables.min.css">
+<link rel="stylesheet" type="text/css" href="/static/app-assets/css/core/menu/menu-types/vertical-menu-modern.css">
+<link rel="stylesheet" type="text/css" href="/static/app-assets/css/core/colors/palette-gradient.css">
+<link rel="stylesheet" type="text/css" href="/static/app-assets/vendors/css/forms/icheck/icheck.css">
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Employee</h4>
+                <div class="heading-elements">
+                    <a href="/employee" class="btn btn-danger mr-1 mt-1"><span class="fa fa-times"></span> Close</a>
+                </div>
+            </div>
+            <div class="card-content mt-1">
+                <div class="card-body">
+                    <form class="form-horizontal" action="" method="POST" novalidate>
+                        <div class="row skin skin-flat mb-1">
+                            <div class="col-12">
+                                {{ form.usr_isProxy.label.text }} <span class="required text-danger">*</span>
+                                {{ form.usr_isProxy() }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2 form-group">
+                                <h5>{{ form.usr_miId.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_miId(class="form-control", placeholder=form.usr_miId.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.usr_alternateMiId.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_alternateMiId(class="form-control", placeholder=form.usr_alternateMiId.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.usr_name.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_name(class="form-control", placeholder=form.usr_name.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.usr_dob.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_dob(class="form-control", placeholder=form.usr_dob.label.text, type="date") }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.usr_gender.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_gender(class="form-control", placeholder=form.usr_gender.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.usr_bloodGroup.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_bloodGroup(class="form-control", placeholder=form.usr_bloodGroup.label.text) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-3 form-group">
+                                <h5>{{ form.usr_permanentAddress.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_permanentAddress(class="form-control", placeholder=form.usr_permanentAddress.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-3 form-group">
+                                <h5>{{ form.usr_currentAddress.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_currentAddress(class="form-control", placeholder=form.usr_currentAddress.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.usr_contactNumber.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_contactNumber(class="form-control", placeholder=form.usr_contactNumber.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.usr_doj.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_doj(class="form-control", placeholder=form.usr_doj.label.text, type="date") }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.usr_experience.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_experience(class="form-control", placeholder=form.usr_experience.label.text) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-2 form-group">
+                                <h5>{{ form.plant_id.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.plant_id(class="form-control", placeholder=form.plant_id.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.branch_id.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.branch_id(class="form-control", placeholder=form.branch_id.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.dept_id.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.dept_id(class="form-control", placeholder=form.dept_id.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.func_id.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.func_id(class="form-control", placeholder=form.func_id.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.project_id.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.project_id(class="form-control", placeholder=form.project_id.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.shift_id.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.shift_id(class="form-control", placeholder=form.shift_id.label.text) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-2 form-group">
+                                <h5>{{ form.usr_designation.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_designation(class="form-control", placeholder=form.usr_designation.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.usr_type.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_type(class="form-control", placeholder=form.usr_type.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.usr_status.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_status(class="form-control", placeholder=form.usr_status.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.usr_pickUpRoute.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_pickUpRoute(class="form-control", placeholder=form.usr_pickUpRoute.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.usr_pickUpPoint.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_pickUpPoint(class="form-control", placeholder=form.usr_pickUpPoint.label.text) }}
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <h5>{{ form.usr_emergencyContactNumber.label.text }} <span class="required text-danger">*</span></h5>
+                                <div class="controls">
+                                    {{ form.usr_emergencyContactNumber(class="form-control", placeholder=form.usr_emergencyContactNumber.label.text) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 form-group">
+                            <div class="text-right">
+                                <button type="submit" name="save" id="save" class="btn btn-success">Save <i class="fa fa-thumbs-o-up position-right"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script src="/static/app-assets/vendors/js/forms/spinner/jquery.bootstrap-touchspin.js"></script>
+<script src="/static/app-assets/vendors/js/forms/validation/jqBootstrapValidation.js"></script>
+<script src="/static/app-assets/vendors/js/forms/icheck/icheck.min.js"></script>
+<script src="/static/app-assets/vendors/js/forms/toggle/switchery.min.js"></script>
+
+<script src="/static/app-assets/js/scripts/forms/validation/form-validation.js"></script>
+
+<script src="/static/app-assets/vendors/js/tables/datatable/datatables.min.js"></script>
+
+<script src="/static/app-assets/vendors/js/forms/icheck/icheck.min.js"></script>
+<script src="/static/app-assets/js/scripts/forms/checkbox-radio.js"></script>
+{% endblock javascripts %}

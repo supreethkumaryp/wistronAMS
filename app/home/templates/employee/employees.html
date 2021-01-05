@@ -1,0 +1,85 @@
+{% extends "layouts/base.html" %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="/static/app-assets/vendors/css/tables/datatable/datatables.min.css">
+<link rel="stylesheet" type="text/css" href="/static/app-assets/css/core/menu/menu-types/vertical-menu-modern.css">
+<link rel="stylesheet" type="text/css" href="/static/app-assets/css/core/colors/palette-gradient.css">
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Employees</h4>
+                <div class="heading-elements">
+                    <a href="/employee/New" class="btn btn-success mr-1 mt-1"><span class="fa fa-plus"></span> Add New</a>
+                </div>
+            </div>
+            <div class="card-content mt-1">
+                <div class="card-body">
+                    <table class="table table-striped table-bordered employees"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script src="/static/app-assets/vendors/js/forms/spinner/jquery.bootstrap-touchspin.js"></script>
+<script src="/static/app-assets/vendors/js/forms/validation/jqBootstrapValidation.js"></script>
+<script src="/static/app-assets/vendors/js/forms/icheck/icheck.min.js"></script>
+<script src="/static/app-assets/vendors/js/forms/toggle/switchery.min.js"></script>
+
+<script src="/static/app-assets/js/scripts/forms/validation/form-validation.js"></script>
+
+<script src="/static/app-assets/vendors/js/tables/datatable/datatables.min.js"></script>
+
+<script>
+
+    $(document).ready(function() {
+        $('.employees').DataTable( {
+            "ajax" : '/get-employees',
+            "columns": [
+                { "title": "MI Id", "data": "usr_miId", 'className': 'dt-center' },
+                { "title": "Alter MI Id", "data": "usr_alternateMiId", 'className': 'dt-center' },
+                { "title": "Name", "data": "usr_name", 'className': 'dt-center' },
+                { "title": "Department", "data": "usr_department", 'className': 'dt-center' },
+                { "title": "Type", "data": "usr_type", 'className': 'dt-center' },
+                { "title": "Designation", "data": "usr_designation", 'className': 'dt-center' },
+                { "title": "Branch", "data": "usr_branch", 'className': 'dt-center' },
+                { "title": "Project", "data": "usr_project", 'className': 'dt-center' },
+                { "title": "Contact No", "data": "usr_contactNumber", 'className': 'dt-center' },
+                { "title": "Status", "data": "usr_status", 'className': 'dt-center' },
+                { "title": "Shift", "data": "usr_shift", 'className': 'dt-center' },
+                {
+                    "title": "Proxy",
+                    "data": "usr_isProxy",
+                    'className': 'dt-center',
+                    "render": function(data, type) {
+                        if (data === true){
+                            return 'Yes'
+                        } else {
+                            return 'No'
+                        }
+                    }
+                },
+                {
+                    "title": "",
+                    "data": "usr_miId",
+                    'className': 'dt-center',
+                    "render": function(data, type) {
+                        return '<a class="primary" href="/employee/'+data+'"><i class="fa fa-pencil"></i></a>'
+                    }
+                },
+			],
+            "responsive": true,
+			"autoWidth": false,
+        });
+    });
+
+</script>
+{% endblock javascripts %}
