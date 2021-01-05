@@ -1,0 +1,126 @@
+{% extends "layouts/base.html" %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="/static/app-assets/vendors/css/tables/datatable/datatables.min.css">
+<link rel="stylesheet" type="text/css" href="/static/app-assets/css/core/menu/menu-types/vertical-menu-modern.css">
+<link rel="stylesheet" type="text/css" href="/static/app-assets/css/core/colors/palette-gradient.css">
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-3">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Select Date</h4>
+            </div>
+            <div class="card-content mt-1">
+                <div class="card-body">
+                    <div class="col-12 form-group">
+                        <h5>{{ form.rst_date.label.text }} <span class="required text-danger">*</span></h5>
+                        <div class="controls">
+                            {{ form.rst_date(class="form-control", placeholder=form.rst_date.label.text, type="date") }}
+                        </div>
+                    </div>
+                    <div class="col-12 form-group">
+                        <div class="text-right">
+                            <button class="btn btn-success" onclick="rst_submit()">Submit</i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-9">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Roster</h4>
+            </div>
+            <div class="card-content mt-1">
+                <div class="card-body">
+                    <form class="form-horizontal" action="" method="POST" novalidate>
+                        <table class="table table-striped table-bordered rosters">
+                            <thead>
+                                <tr>
+                                    <th>MI ID</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in data %}
+                                <tr>
+                                    <td>{{ row['usr_miId'] }}</td>
+                                    <td>{{ row['usr_name'] }}</td>
+                                    <td>
+                                        <select class="form-control status" data-validation-required-message="This field is required" id="usr_status_{{ row['usr_miId'] }}" name="usr_status_{{ row['usr_miId'] }}" data-value="{{ row['usr_value'] }}" aria-invalid="false">
+                                            <option value="">-- Select --</option>
+                                            <option value="present">Present</option>
+                                            <option value="lop">LOP</option>
+                                            <option value="ldd">LDD</option>
+                                            <option value="sl">SL</option>
+                                            <option value="sl">SL</option>
+                                            <option value="el">EL</option>
+                                            <option value="cl">CL</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>MI ID</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <div class="col-12 form-group">
+                            <div class="text-center">
+                                <button type="submit" name="save" id="save" class="btn btn-success">Save</i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script src="/static/app-assets/vendors/js/forms/spinner/jquery.bootstrap-touchspin.js"></script>
+<script src="/static/app-assets/vendors/js/forms/validation/jqBootstrapValidation.js"></script>
+<script src="/static/app-assets/vendors/js/forms/icheck/icheck.min.js"></script>
+<script src="/static/app-assets/vendors/js/forms/toggle/switchery.min.js"></script>
+
+<script src="/static/app-assets/js/scripts/forms/validation/form-validation.js"></script>
+
+<script src="/static/app-assets/vendors/js/tables/datatable/datatables.min.js"></script>
+
+<script>
+    function rst_submit() {
+        window.location.href = '/roster/' + $("#rst_date").val();
+    }
+</script>
+
+<script>
+
+    $(document).ready(function() {
+        $( ".status" ).each(function( index ) {
+            let value = $(this).data("value");
+            $(this).val(value);
+        });
+    });
+
+    $(document).ready(function() {
+        $('.rosters').DataTable( {
+            "responsive": true,
+			"autoWidth": false,
+        });
+    });
+
+</script>
+{% endblock javascripts %}

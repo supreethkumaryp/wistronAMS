@@ -7,17 +7,22 @@ from flask_login import (
     login_user,
     logout_user
 )
-from datetime import date
+from datetime import date, datetime
 
 from app import db, login_manager
 from app.home import blueprint
-from app.home.models import Department, Function, Plant, Branch, Project, Shift
-from app.home.forms import DepartmentForm, FunctionForm, PlantForm, BranchForm, ProjectForm, ShiftForm, UserForm
+from app.home.models import Department, Function, Plant, Branch, Project, Shift, Roster
+from app.home.forms import DepartmentForm, FunctionForm, PlantForm, BranchForm, ProjectForm, ShiftForm, UserForm, RosterDateForm
 
 from app.auth.models import User
 from app.auth.utils import hash_pass
 
 from jinja2 import TemplateNotFound
+
+# Context
+@blueprint.context_processor
+def inject_today_date():
+    return {'today_date': date.today()}
 
 # Department
 @blueprint.route('/department', methods=['GET', 'POST'])
@@ -221,7 +226,13 @@ def employee():
 @login_required
 def get_employees():
     data = []
-    for record in db.session.query(User).join(Department, Department.dept_id == User.dept_id).join(Function, Function.func_id == User.func_id).join(Plant, Plant.plant_id == User.plant_id).join(Branch, Branch.branch_id == User.branch_id).join(Project, Project.project_id == User.project_id).join(Shift, Shift.shift_id == User.shift_id).all():
+
+    if (current_user.usr_designation == "em"):
+        records = db.session.query(User).join(Department, Department.dept_id == User.dept_id).join(Function, Function.func_id == User.func_id).join(Plant, Plant.plant_id == User.plant_id).join(Branch, Branch.branch_id == User.branch_id).join(Project, Project.project_id == User.project_id).join(Shift, Shift.shift_id == User.shift_id).all()
+    else:
+        records = db.session.query(User).filter(User.usr_department == current_user.usr_department).join(Department, Department.dept_id == User.dept_id).join(Function, Function.func_id == User.func_id).join(Plant, Plant.plant_id == User.plant_id).join(Branch, Branch.branch_id == User.branch_id).join(Project, Project.project_id == User.project_id).join(Shift, Shift.shift_id == User.shift_id).all()
+
+    for record in records:
         player_record = {
             'usr_miId' : record.usr_miId,
             'usr_alternateMiId' : record.usr_alternateMiId,
@@ -308,3 +319,49 @@ def employee_create(usr_miId):
         db.session.commit()
         return redirect(url_for('home_blueprint.employee'))
     return render_template('employee/create-edit-employee.html', form=form)
+
+# Roster
+@blueprint.route('/roster/<rst_date>', methods=['GET', 'POST'])
+@login_required
+def roster(rst_date):
+    form = RosterDateForm(request.form)
+    form.rst_date.data = datetime.strptime(rst_date, r"%Y-%m-%d")
+
+    data = []
+    for record in User.query.filter_by(usr_department=current_user.usr_department, usr_shift=current_user.usr_shift).all():
+        rst = Roster.query.filter_by(rst_date=datetime.strptime(rst_date, r"%Y-%m-%d"), usr_miId=record.usr_miId).first()
+        data.append({
+            'usr_miId' : record.usr_miId,
+            'usr_name' : record.usr_name,
+            'usr_value' : rst.rst_status if rst else ""
+        })
+
+    if 'save' in request.form:
+        for key in request.form:
+
+            if not key.startswith("usr_status_"):
+                continue
+
+            rst = Roster.query.filter_by(usr_miId=key.split("_")[-1], rst_date = datetime.strptime(rst_date, r"%Y-%m-%d")).first()
+
+            if rst:
+                rst.rst_status = request.form[key]
+            else:
+                rst = Roster(
+                    usr_miId = key.split("_")[-1],
+                    rst_date = datetime.strptime(rst_date, r"%Y-%m-%d"),
+                    rst_status = request.form[key]
+                )
+
+                db.session.add(rst)
+            db.session.commit()
+
+            return redirect(url_for('home_blueprint.roster'))
+
+    return render_template('roster/rosters.html', data=data, form=form)
+
+# Dashboard
+@blueprint.route('/dashboard', methods=['GET', 'POST'])
+@login_required
+def dashboard():
+    pass

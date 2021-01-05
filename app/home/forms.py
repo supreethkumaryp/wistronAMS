@@ -254,3 +254,12 @@ class UserForm(FlaskForm):
         'Is Shift Incharge',
         validators=[DataRequired()]
     )
+
+class RosterDateForm(FlaskForm):
+    """Roster Date Form"""
+
+    rst_date = DateField(
+        'Roster Date',
+        validators=[DataRequired()],
+        render_kw={"required":"true", "data-validation-required-message":"This field is required"}
+    )

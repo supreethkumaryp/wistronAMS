@@ -210,3 +210,28 @@ class Shift(db.Model):
             data[property] = value
 
         return data
+
+class Roster(db.Model):
+
+    __tablename__ = 'AMS_Rosters'
+
+    rst_id = Column(Integer, primary_key=True, autoincrement="auto")
+    usr_miId = Column(String(10), ForeignKey("AMS_Users.usr_miId"))
+    rst_date = Column(Date)
+    rst_status = Column(String(16))
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, onupdate=func.now())
+
+    # Relationships
+    rst_user = relationship("User")
+
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+
+            if (hasattr(value, '__iter__') and not isinstance(value, str)):
+                value = value[0]
+
+            setattr(self, property, value)
+
+    def __repr__(self):
+        return "<Roster {}>".format(self.dept_id)
