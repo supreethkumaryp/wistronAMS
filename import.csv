@@ -1,0 +1,2 @@
+usr_miId,usr_alternateMiId,usr_name,dept_id,func_id,usr_type,plant_id,usr_designation,usr_gender,branch_id,usr_experience,usr_dob,project_id,usr_permanentAddress,usr_currentAddress,usr_pickUpRoute,usr_pickUpPoint,usr_contactNumber,usr_emergencyContactNumber,usr_bloodGroup,usr_doj,usr_status,shift_id,usr_isProxy
+12345,12345,Supreeth Kumar Y P,DEPT 1,FUNC 1,dl,PLANT 1,m,male,BRANCH 1,8,31-01-1996,PROJECT 1,add,add,a1,a,9743977577,9743977577,B+,02-02-2020,active,A,No

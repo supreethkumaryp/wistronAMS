@@ -22,6 +22,9 @@ class Department(db.Model):
             if (hasattr(value, '__iter__') and not isinstance(value, str)):
                 value = value[0]
 
+            if (value == "New"):
+                continue
+
             setattr(self, property, value)
 
     def __repr__(self):
@@ -55,6 +58,9 @@ class Function(db.Model):
 
             if (hasattr(value, '__iter__') and not isinstance(value, str)):
                 value = value[0]
+
+            if (value == "New"):
+                continue
 
             setattr(self, property, value)
 
@@ -90,6 +96,9 @@ class Plant(db.Model):
             if (hasattr(value, '__iter__') and not isinstance(value, str)):
                 value = value[0]
 
+            if (value == "New"):
+                continue
+
             setattr(self, property, value)
 
     def __repr__(self):
@@ -123,6 +132,9 @@ class Branch(db.Model):
 
             if (hasattr(value, '__iter__') and not isinstance(value, str)):
                 value = value[0]
+
+            if (value == "New"):
+                continue
 
             setattr(self, property, value)
 
@@ -158,6 +170,9 @@ class Project(db.Model):
             if (hasattr(value, '__iter__') and not isinstance(value, str)):
                 value = value[0]
 
+            if (value == "New"):
+                continue
+
             setattr(self, property, value)
 
     def __repr__(self):
@@ -191,6 +206,9 @@ class Shift(db.Model):
 
             if (hasattr(value, '__iter__') and not isinstance(value, str)):
                 value = value[0]
+
+            if (value == "New"):
+                continue
 
             setattr(self, property, value)
 
@@ -230,6 +248,9 @@ class Roster(db.Model):
 
             if (hasattr(value, '__iter__') and not isinstance(value, str)):
                 value = value[0]
+
+            if (value == "New"):
+                continue
 
             setattr(self, property, value)
 

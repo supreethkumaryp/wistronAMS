@@ -263,3 +263,12 @@ class RosterDateForm(FlaskForm):
         validators=[DataRequired()],
         render_kw={"required":"true", "data-validation-required-message":"This field is required"}
     )
+
+class ImportForm(FlaskForm):
+    """Import Form"""
+
+    csv_file = FileField(
+        "Employees CSV File",
+        validators=[FileRequired()],
+        render_kw={"required":"true", "data-validation-required-message":"This field is required", "accept":".csv"}
+    )

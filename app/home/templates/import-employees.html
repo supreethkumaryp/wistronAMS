@@ -1,0 +1,69 @@
+{% extends "layouts/base.html" %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="/static/app-assets/css/core/menu/menu-types/vertical-menu-modern.css">
+    <link rel="stylesheet" type="text/css" href="/static/app-assets/css/core/colors/palette-gradient.css">
+    <link rel="stylesheet" type="text/css" href="/static/app-assets/css/plugins/forms/validation/form-validation.css">
+    <link rel="stylesheet" type="text/css" href="/static/app-assets/css/plugins/forms/switch.css">
+
+    <link rel="stylesheet" type="text/css" href="/static/assets/css/style.css">
+{% endblock stylesheets %}
+
+{% block pagetitle %}Import Employees{% endblock pagetitle %}
+
+{% block content %}
+
+<!-- New Shift start -->
+<section class="input-validation">
+    <div class="row">
+        <div class="col-8 offset-2">
+            <div class="card">
+                <div class="card-body">
+                    <form class="form-horizontal" action="{{ url_for(request.endpoint) }}" method="POST" novalidate enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <h5>{{ form.csv_file.label.text }} <span class="required">*</span></h5>
+                                    <div class="custom-file controls">
+                                        {{ form.csv_file(class="custom-file-input") }}
+                                        <label class="custom-file-label" for="{{ form.csv_file.name }}">Choose file</label>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <button type="submit" name="importcsv" id="importcsv" class="btn btn-success">Save <i class="fa fa-thumbs-o-up position-right"></i></button>
+                                    <button type="reset" class="btn btn-danger">Reset <i class="fa fa-refresh position-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- New Shift end -->
+
+{% endblock content %}
+
+{% block javascripts %}
+<script src="/static/app-assets/vendors/js/forms/spinner/jquery.bootstrap-touchspin.js"></script>
+<script src="/static/app-assets/vendors/js/forms/validation/jqBootstrapValidation.js"></script>
+<script src="/static/app-assets/vendors/js/forms/icheck/icheck.min.js"></script>
+<script src="/static/app-assets/vendors/js/forms/toggle/switchery.min.js"></script>
+
+<script src="/static/app-assets/js/scripts/forms/validation/form-validation.js"></script>
+
+<script>
+    (function(window, document, $) {
+    'use strict';
+    
+    //Custom File Input
+  
+    $('.custom-file input').change(function (e) {
+        $(this).next('.custom-file-label').html(e.target.files[0].name);
+    });
+  
+  
+  })(window, document, jQuery);
+</script>
+{% endblock javascripts %}

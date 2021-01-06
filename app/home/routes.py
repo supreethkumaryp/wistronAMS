@@ -8,11 +8,12 @@ from flask_login import (
     logout_user
 )
 from datetime import date, datetime
+import csv
 
 from app import db, login_manager
 from app.home import blueprint
 from app.home.models import Department, Function, Plant, Branch, Project, Shift, Roster
-from app.home.forms import DepartmentForm, FunctionForm, PlantForm, BranchForm, ProjectForm, ShiftForm, UserForm, RosterDateForm
+from app.home.forms import DepartmentForm, FunctionForm, PlantForm, BranchForm, ProjectForm, ShiftForm, UserForm, RosterDateForm, ImportForm
 
 from app.auth.models import User
 from app.auth.utils import hash_pass
@@ -359,6 +360,68 @@ def roster(rst_date):
             return redirect('/roster/{}'.format(rst_date))
 
     return render_template('roster/rosters.html', data=data, form=form)
+
+# Import / Export
+@blueprint.route('/import-employees', methods=['GET', 'POST'])
+@login_required
+def import_users():
+    form = ImportForm(request.form)
+
+    if 'importcsv' in request.form:
+        uploaded_file = request.files['csv_file']
+
+        if uploaded_file.filename != '':
+
+            if not uploaded_file.filename.split(".")[-1].lower() == "csv":
+                return render_template('import-employees.html', msg="Only CSV File is allowed", form=form)
+
+            uploaded_file.save("import.csv")
+
+            with open('import.csv') as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter=',')
+                line_count = 0
+                for row in csv_reader:
+                    if line_count == 0:
+                        line_count += 1
+                    else:
+                        employee = User(
+                            usr_miId = str(row[0]),
+                            usr_alternateMiId = str(row[1]),
+                            usr_name = str(row[2]),
+                            dept_id = Department.query.filter_by(dept_name=str(row[3])).first().dept_id,
+                            func_id = Function.query.filter_by(func_name=str(row[4])).first().func_id,
+                            usr_type = str(row[5]),
+                            plant_id = Plant.query.filter_by(plant_name=str(row[6])).first().plant_id,
+                            usr_designation = str(row[7]),
+                            usr_gender = str(row[8]),
+                            branch_id = Branch.query.filter_by(branch_name=str(row[9])).first().branch_id,
+                            usr_experience = float(row[10]),
+                            usr_dob = datetime.strptime(str(row[11]), r"%d-%m-%Y"),
+                            project_id = Project.query.filter_by(project_name=str(row[12])).first().project_id,
+                            usr_permanentAddress = str(row[13]),
+                            usr_currentAddress = str(row[14]),
+                            usr_pickUpRoute = str(row[15]),
+                            usr_pickUpPoint = str(row[16]),
+                            usr_contactNumber = str(row[17]),
+                            usr_emergencyContactNumber = str(row[18]),
+                            usr_bloodGroup = str(row[19]),
+                            usr_doj = datetime.strptime(str(row[20]), r"%d-%m-%Y"),
+                            usr_status = str(row[21]),
+                            shift_id = Shift.query.filter_by(shift_name=str(row[22])).first().shift_id,
+                            usr_isProxy = 1 if str(row[23]) == "Yes" else 0,
+                            usr_isFirstLogin = 1
+                        )
+
+                        employee.usr_password = hash_pass("Wistron@123")
+
+                        db.session.add(employee)
+                        db.session.commit()
+
+                        line_count += 1
+        
+            return redirect(url_for('home_blueprint.employee'))
+
+    return render_template('import-employees.html', form=form)
 
 # Dashboard
 @blueprint.route('/dashboard/<reoprt_date>', methods=['GET', 'POST'])
