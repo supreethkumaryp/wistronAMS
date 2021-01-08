@@ -357,7 +357,7 @@ def roster(rst_date):
                 db.session.add(rst)
             db.session.commit()
 
-            return redirect('/roster/{}'.format(rst_date))
+        return redirect('/roster/{}'.format(rst_date))
 
     return render_template('roster/rosters.html', data=data, form=form)
 
