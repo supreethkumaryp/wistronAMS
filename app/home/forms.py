@@ -239,7 +239,8 @@ class UserForm(FlaskForm):
             ("", "-- Select --"),
             ("active", "Active"),
             ("inactive", "In-Active"),
-            ("abscond", "Abscond")
+            ("abscond", "Abscond"),
+            ("resigned", "Resigned")
         ],
         validators=[DataRequired()],
         render_kw={"required":"true", "data-validation-required-message":"This field is required"}

@@ -441,9 +441,11 @@ def dashboard(reoprt_date):
         for shift in shifts:
             data[dept.dept_name][shift.shift_name] = {}
 
-            data[dept.dept_name][shift.shift_name]['total'] = User.query.filter_by(dept_id=dept.dept_id, shift_id=shift.shift_id).count()
-            data[dept.dept_name][shift.shift_name]['total_dl'] = User.query.filter_by(dept_id=dept.dept_id, shift_id=shift.shift_id, usr_type="dl").count()
-            data[dept.dept_name][shift.shift_name]['total_idl'] = User.query.filter_by(dept_id=dept.dept_id, shift_id=shift.shift_id, usr_type="idl").count()
+            data[dept.dept_name][shift.shift_name]['total'] = db.session.query(User).filter(User.dept_id==dept.dept_id, User.shift_id == shift.shift_id, User.usr_status != "resigned").count()
+
+            data[dept.dept_name][shift.shift_name]['total_dl'] = db.session.query(User).filter(User.dept_id==dept.dept_id, User.shift_id==shift.shift_id, User.usr_type=="dl", User.usr_status != "resigned").count()
+
+            data[dept.dept_name][shift.shift_name]['total_idl'] = db.session.query(User).filter(User.dept_id==dept.dept_id, User.shift_id==shift.shift_id, User.usr_type=="idl", User.usr_status != "resigned").count()
 
             data[dept.dept_name][shift.shift_name]['present'] = 0
             data[dept.dept_name][shift.shift_name]['present_dl'] = 0
@@ -465,12 +467,42 @@ def dashboard(reoprt_date):
 
     for dept in depts:
         for shift in shifts:
-            data[dept.dept_name][shift.shift_name]['percentage_present'] = (data[dept.dept_name][shift.shift_name]['present'] / data[dept.dept_name][shift.shift_name]['total'] * 100) if data[dept.dept_name][shift.shift_name]['total'] else 0
-            data[dept.dept_name][shift.shift_name]['percentage_present_dl'] = (data[dept.dept_name][shift.shift_name]['present_dl'] / data[dept.dept_name][shift.shift_name]['total_dl'] * 100) if data[dept.dept_name][shift.shift_name]['total_dl'] else 0
-            data[dept.dept_name][shift.shift_name]['percentage_present_idl'] = (data[dept.dept_name][shift.shift_name]['present_idl'] / data[dept.dept_name][shift.shift_name]['total_idl'] * 100) if data[dept.dept_name][shift.shift_name]['total_idl'] else 0
+            data[dept.dept_name][shift.shift_name]['percentage_present'] = round((data[dept.dept_name][shift.shift_name]['present'] / data[dept.dept_name][shift.shift_name]['total'] * 100) if data[dept.dept_name][shift.shift_name]['total'] else 0)
+            data[dept.dept_name][shift.shift_name]['percentage_present_dl'] = round((data[dept.dept_name][shift.shift_name]['present_dl'] / data[dept.dept_name][shift.shift_name]['total_dl'] * 100) if data[dept.dept_name][shift.shift_name]['total_dl'] else 0)
+            data[dept.dept_name][shift.shift_name]['percentage_present_idl'] = round((data[dept.dept_name][shift.shift_name]['present_idl'] / data[dept.dept_name][shift.shift_name]['total_idl'] * 100) if data[dept.dept_name][shift.shift_name]['total_idl'] else 0)
 
-            data[dept.dept_name][shift.shift_name]['percentage_absent'] = (data[dept.dept_name][shift.shift_name]['absent'] / data[dept.dept_name][shift.shift_name]['total'] * 100) if data[dept.dept_name][shift.shift_name]['total'] else 0
-            data[dept.dept_name][shift.shift_name]['percentage_absent_dl'] = (data[dept.dept_name][shift.shift_name]['absent_dl'] / data[dept.dept_name][shift.shift_name]['total_dl'] * 100) if data[dept.dept_name][shift.shift_name]['total_dl'] else 0
-            data[dept.dept_name][shift.shift_name]['percentage_absent_idl'] = (data[dept.dept_name][shift.shift_name]['absent_idl'] / data[dept.dept_name][shift.shift_name]['total_idl'] * 100) if data[dept.dept_name][shift.shift_name]['total_idl'] else 0
+            data[dept.dept_name][shift.shift_name]['percentage_absent'] = round((data[dept.dept_name][shift.shift_name]['absent'] / data[dept.dept_name][shift.shift_name]['total'] * 100) if data[dept.dept_name][shift.shift_name]['total'] else 0)
+            data[dept.dept_name][shift.shift_name]['percentage_absent_dl'] = round((data[dept.dept_name][shift.shift_name]['absent_dl'] / data[dept.dept_name][shift.shift_name]['total_dl'] * 100) if data[dept.dept_name][shift.shift_name]['total_dl'] else 0)
+            data[dept.dept_name][shift.shift_name]['percentage_absent_idl'] = round((data[dept.dept_name][shift.shift_name]['absent_idl'] / data[dept.dept_name][shift.shift_name]['total_idl'] * 100) if data[dept.dept_name][shift.shift_name]['total_idl'] else 0)
+
+    data['total'] = 0
+    data['total_dl'] = 0
+    data['total_idl'] = 0
+    data['present'] = 0
+    data['present_dl'] = 0
+    data['present_idl'] = 0
+    data['absent'] = 0
+    data['absent_dl'] = 0
+    data['absent_idl'] = 0
+
+    for dept in depts:
+        for shift in shifts:
+            data['total'] += data[dept.dept_name][shift.shift_name]['total']
+            data['total_dl'] += data[dept.dept_name][shift.shift_name]['total_dl']
+            data['total_idl'] += data[dept.dept_name][shift.shift_name]['total_idl']
+            data['present'] += data[dept.dept_name][shift.shift_name]['present']
+            data['present_dl'] += data[dept.dept_name][shift.shift_name]['present_dl']
+            data['present_idl'] += data[dept.dept_name][shift.shift_name]['present_idl']
+            data['absent'] += data[dept.dept_name][shift.shift_name]['absent']
+            data['absent_dl'] += data[dept.dept_name][shift.shift_name]['absent_dl']
+            data['absent_idl'] += data[dept.dept_name][shift.shift_name]['absent_idl']
+
+    data['percentage_present'] = round((data['present'] / data['total'] * 100) if data['total'] else 0)
+    data['percentage_present_dl'] = round((data['present_dl'] / data['total_dl'] * 100) if data['total_dl'] else 0)
+    data['percentage_present_idl'] = round((data['present_idl'] / data['total_idl'] * 100) if data['total_idl'] else 0)
+    
+    data['percentage_absent'] = round((data['absent'] / data['total'] * 100) if data['total'] else 0)
+    data['percentage_absent_dl'] = round((data['absent_dl'] / data['total_dl'] * 100) if data['total_dl'] else 0)
+    data['percentage_absent_idl'] = round((data['absent_idl'] / data['total_idl'] * 100) if data['total_idl'] else 0)
 
     return render_template('dashboard.html', data=data, form=form)

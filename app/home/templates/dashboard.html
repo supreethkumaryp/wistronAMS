@@ -59,17 +59,19 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>Department</th>
-                                <th>Shift</th>
-                                <th>Total</th>
-                                <th>Present</th>
-                                <th>Absent</th>
-                                <th>DL Total</th>
-                                <th>DL Present</th>
-                                <th>DL Absent</th>
-                                <th>IDL Total</th>
-                                <th>IDL Present</th>
-                                <th>IDL Absent</th>
+                                <th></th>
+                                <th></th>
+                                <th>{{ data['total'] }}</th>
+                                <th>{{ data['present'] }} ({{ data['percentage_present'] }}%)</th>
+                                <th>{{ data['absent'] }} ({{ data['percentage_absent'] }}%)</th>
+                                
+                                <th>{{ data['total_dl'] }}</th>
+                                <th>{{ data['present_dl'] }} ({{ data['percentage_present_dl'] }}%)</th>
+                                <th>{{ data['absent_dl'] }} ({{ data['percentage_absent_dl'] }}%)</th>
+
+                                <th>{{ data['total_idl'] }}</th>
+                                <th>{{ data['present_idl'] }} ({{ data['percentage_present_idl'] }}%)</th>
+                                <th>{{ data['absent_idl'] }} ({{ data['percentage_absent_idl'] }}%)</th>
                             </tr>
                         </tfoot>
                     </table>
