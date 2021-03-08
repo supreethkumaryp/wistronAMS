@@ -14,7 +14,8 @@
             <div class="card-header">
                 <h4 class="card-title">Roster</h4>
                 <div class="heading-elements">
-                    {{ form.rst_date(class="form-control", placeholder=form.rst_date.label.text, type="date", onchange="rst_submit()") }}
+                    {{ form.rst_date(class="form-control", placeholder=form.rst_date.label.text, type="date",
+                    onchange="rst_submit()") }}
                 </div>
             </div>
             <div class="card-content mt-1">
@@ -37,46 +38,69 @@
                         </thead>
                         <tbody>
                             {% for dept in data %}
-                                {% for shift in data[dept] %}
-                                <tr>
-                                    <td>{{ dept }}</td>
-                                    <td>{{ shift }}</td>
-                                    <td>{{ data[dept][shift]['total'] }}</td>
-                                    <td>{{ data[dept][shift]['present'] }} ({{ data[dept][shift]['percentage_present'] }}%)</td>
-                                    <td>{{ data[dept][shift]['absent'] }} ({{ data[dept][shift]['percentage_absent'] }}%)</td>
-                                    
-                                    <td>{{ data[dept][shift]['total_dl'] }}</td>
-                                    <td>{{ data[dept][shift]['present_dl'] }} ({{ data[dept][shift]['percentage_present_dl'] }}%)</td>
-                                    <td>{{ data[dept][shift]['absent_dl'] }} ({{ data[dept][shift]['percentage_absent_dl'] }}%)</td>
+                            {% for shift in data[dept] %}
+                            <tr>
+                                <td>{{ dept }}</td>
+                                <td>{{ shift }}</td>
+                                <td>{{ data[dept][shift]['total'] }}</td>
+                                <td>{{ data[dept][shift]['present'] }} ({{ data[dept][shift]['percentage_present'] }}%)
+                                </td>
+                                <td>{{ data[dept][shift]['absent'] }} ({{ data[dept][shift]['percentage_absent'] }}%)
+                                </td>
 
-                                    <td>{{ data[dept][shift]['total_idl'] }}</td>
-                                    <td>{{ data[dept][shift]['present_idl'] }} ({{ data[dept][shift]['percentage_present_idl'] }}%)</td>
-                                    <td>{{ data[dept][shift]['absent_idl'] }} ({{ data[dept][shift]['percentage_absent_idl'] }}%)</td>
+                                <td>{{ data[dept][shift]['total_dl'] }}</td>
+                                <td>{{ data[dept][shift]['present_dl'] }} ({{ data[dept][shift]['percentage_present_dl']
+                                    }}%)</td>
+                                <td>{{ data[dept][shift]['absent_dl'] }} ({{ data[dept][shift]['percentage_absent_dl']
+                                    }}%)</td>
 
-                                </tr>
-                                {% endfor %}
+                                <td>{{ data[dept][shift]['total_idl'] }}</td>
+                                <td>{{ data[dept][shift]['present_idl'] }} ({{
+                                    data[dept][shift]['percentage_present_idl'] }}%)</td>
+                                <td>{{ data[dept][shift]['absent_idl'] }} ({{ data[dept][shift]['percentage_absent_idl']
+                                    }}%)</td>
+
+                            </tr>
+                            {% endfor %}
                             {% endfor %}
                         </tbody>
                         <tfoot>
                             <tr>
                                 <th></th>
                                 <th></th>
-                                <th>{{ data['total'] }}</th>
-                                <th>{{ data['present'] }} ({{ data['percentage_present'] }}%)</th>
-                                <th>{{ data['absent'] }} ({{ data['percentage_absent'] }}%)</th>
-                                
-                                <th>{{ data['total_dl'] }}</th>
-                                <th>{{ data['present_dl'] }} ({{ data['percentage_present_dl'] }}%)</th>
-                                <th>{{ data['absent_dl'] }} ({{ data['percentage_absent_dl'] }}%)</th>
+                                <th>{{ data1['total'] }}</th>
+                                <th>{{ data1['present'] }} ({{ data1['percentage_present'] }}%)</th>
+                                <th>{{ data1['absent'] }} ({{ data1['percentage_absent'] }}%)</th>
 
-                                <th>{{ data['total_idl'] }}</th>
-                                <th>{{ data['present_idl'] }} ({{ data['percentage_present_idl'] }}%)</th>
-                                <th>{{ data['absent_idl'] }} ({{ data['percentage_absent_idl'] }}%)</th>
+                                <th>{{ data1['total_dl'] }}</th>
+                                <th>{{ data1['present_dl'] }} ({{ data1['percentage_present_dl'] }}%)</th>
+                                <th>{{ data1['absent_dl'] }} ({{ data1['percentage_absent_dl'] }}%)</th>
+
+                                <th>{{ data1['total_idl'] }}</th>
+                                <th>{{ data1['present_idl'] }} ({{ data1['percentage_present_idl'] }}%)</th>
+                                <th>{{ data1['absent_idl'] }} ({{ data1['percentage_absent_idl'] }}%)</th>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-4">
+        <div class="chartjs">
+            <canvas id="chart_total"></canvas>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="chartjs">
+            <canvas id="chart_dl"></canvas>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="chartjs">
+            <canvas id="chart_idl"></canvas>
         </div>
     </div>
 </div>
@@ -101,10 +125,10 @@
 
 <script>
 
-    $(document).ready(function() {
-        $('.reports').DataTable( {
+    $(document).ready(function () {
+        $('.reports').DataTable({
             "columnDefs": [
-                {"className": "dt-center", "targets": "_all"}
+                { "className": "dt-center", "targets": "_all" }
             ],
             dom: 'Bfrtip',
             buttons: [
@@ -118,5 +142,118 @@
         });
     });
 
+</script>
+
+<script src="/static/app-assets/vendors/js/charts/chart.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        //Get the context of the Chart canvas element we want to select
+        var ctx = $("#chart_total");
+
+        // Chart Options
+        var chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            responsiveAnimationDuration: 500,
+        };
+
+        // Chart Data
+        var chartData = {
+            labels: ["Total Present", "Total Absent"],
+            datasets: [{
+                label: "Total",
+                data: [{{data1['percentage_present']}}, {{data1['percentage_absent']}}],
+                backgroundColor: ['#16D39A', '#FF4558'],
+            }]
+        };
+
+        var config = {
+            type: 'pie',
+
+            // Chart Options
+            options: chartOptions,
+
+            data: chartData
+        };
+
+        // Create the chart
+        var pieSimpleChart = new Chart(ctx, config);
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        //Get the context of the Chart canvas element we want to select
+        var ctx1 = $("#chart_dl");
+
+        // Chart Options
+        var chartOptions1 = {
+            responsive: true,
+            maintainAspectRatio: false,
+            responsiveAnimationDuration: 500,
+        };
+
+        // Chart Data
+        var chartData1 = {
+            labels: ["DL Present", "DL Absent"],
+            datasets: [{
+                label: "DL",
+                data: [{{data1['percentage_present_dl']}}, {{data1['percentage_absent_dl']}}],
+                backgroundColor: ['#16D39A', '#FF4558'],
+            }]
+        };
+
+        var config1 = {
+            type: 'pie',
+
+            // Chart Options
+            options: chartOptions1,
+
+            data: chartData1
+        };
+
+        // Create the chart
+        var pieSimpleChart1 = new Chart(ctx1, config1);
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        //Get the context of the Chart canvas element we want to select
+        var ctx2 = $("#chart_idl");
+
+        // Chart Options
+        var chartOptions2 = {
+            responsive: true,
+            maintainAspectRatio: false,
+            responsiveAnimationDuration: 500,
+        };
+
+        // Chart Data
+        var chartData2 = {
+            labels: ["IDL Present", "IDL Absent"],
+            datasets: [{
+                label: "IDL",
+                data: [{{data1['percentage_present_idl']}}, {{data1['percentage_absent_idl']}}],
+                backgroundColor: ['#16D39A', '#FF4558'],
+            }]
+        };
+
+        var config2 = {
+            type: 'pie',
+
+            // Chart Options
+            options: chartOptions2,
+
+            data: chartData2
+        };
+
+        // Create the chart
+        var pieSimpleChart2 = new Chart(ctx2, config2);
+    });
 </script>
 {% endblock javascripts %}

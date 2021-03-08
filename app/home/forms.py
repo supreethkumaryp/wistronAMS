@@ -147,6 +147,8 @@ class UserForm(FlaskForm):
             ("tl", "Team Leader"),
             ("se", "Senior Engineer"),
             ("je", "Junior Engineer"),
+            ("eng", "Engineer"),
+            ("te", "Trainee Engineer"),
             ("get", "GET"),
             ("det", "DET"),
             ("op", "Operator")
